@@ -1,72 +1,68 @@
 #include "grid.h";
-#include "case.cpp";
+#include "case.h";
 #include <iostream>
+#include <string>
 #include <vector>
 
 Grid::Grid()
 {
-    int m_iSize = 12;
-    char m_cGrid[12];
-    std::vector<Case> m_vcCases;
-    std::vector<int> m_vifreePosition;
-    freePosition();
-    init();
+    m_iSize = 16;
+    m_oGrid = new Case[m_iSize];
+    newTiles();
+    newTiles();
 }
 
-void Grid::init()
-{
-    for (int i = 0; i < m_iSize; i++)
-    {
-        m_cGrid[i] = ' ';
-    }
-}
 
-void Grid::operator<<()
+void Grid::display()
 {
-    for (int i = 0; i < m_iSize; i++)
-    {
-        for (int j = 0; j < m_vcCases.lenght(); j++)
+   for (int i = 0; i < m_iSize; i++)
+   {
+        std::cout << "[" << m_oGrid[i].m_cSymbol << "]";
+        
+        if (i % 4 == 3)
         {
-            if (m_vcCases[j].m_iPosition == i)
-            {
-                std::cout << "[" << m_vcCases.m_iSymbol << "]";
-            }
-            else
-            {
-                std::cout << "[" << m_cGrid[i] << "]";
-            }
-
-            if (m_iSize % 4)
-            {
-                cout << endl;
-            }
+            std::cout << std::endl;
         }
-    }
+   }
 }
 
 bool Grid::isFull() {
-    if (m_vifreePosition.empty())
+    if (freePosition().empty())
     {
-        return True;
+        return true;
     }
 }
 
-void Grid::freePosition() {
+Grid::~Grid()
+{
+    delete[] m_oGrid;
+}
+
+std::vector<int> Grid::freePosition() {
+    std::vector<int> vifreePosition;
     for (int i = 0; i < m_iSize; i++)
     {
-        if (m_cGrid[i] == ' ')
-        {
-            m_vifreePosition.insert(i);
+        if (m_oGrid[i].m_iValue == 0)
+        {	
+            vifreePosition.push_back(i);
         }
     }
+    return vifreePosition;
 }
 
-void Grid::addCase() {
-    Case oCase = new Case();
-    m_vcCases.insert(oCase)
+void Grid::newTiles(){
+    int iPossibleValue[2] = {2, 4};
+    int position = freePosition()[rand() % freePosition().size()];
+    m_oGrid[position].m_iValue = iPossibleValue[rand() % 2];
+    m_oGrid[position].m_cSymbol = std::to_string(m_oGrid[position].m_iValue).c_str();
 }
 
-~Grid()
-{
+void Grid::leftMovement() {
+    for (int i = 0; i < m_iSize; i++) {
+        if (i % 4 != 0) {
+            if (m_oGrid[i - 1].m_iValue != m_oGrid[i].m_iValue) {
 
+            }
+        }
+    }
 }
