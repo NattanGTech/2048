@@ -1,23 +1,21 @@
-#include <stdio.h>
-#include <iostream>
+#pragma once
 #include <vector>
-#include "case.h"
+#include "case.h";
 
 class Grid
 {
 public:
 
     int m_iSize;
-    char m_cGrid[12];
-    std::vector<Case> m_vcCases;
-    std::vector<int> m_vifreePosition;
+    Case* m_oGrid;
 
     Grid();
-private:
-    void init();
-public:
-    void opereator<<();
+
+    void display();
     bool isFull();
-    void freePosition();
-    void addCase();
+    std::vector<int> freePosition();
+    void newTiles();
+    void leftMovement();
+
+   ~Grid();
 };
