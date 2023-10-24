@@ -16,6 +16,8 @@ public:
     std::vector<int> freePosition();
     void newTiles();
     void leftMovement();
-
+    void rightMovement();
+    void upMovement();
+    void downMovement();
    ~Grid();
 };
