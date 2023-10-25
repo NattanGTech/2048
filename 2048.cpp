@@ -20,7 +20,6 @@ int main()
     oGrid->display();
     bool bGameActive = true;
     bool badKey = true;
-    int flag = 1;
     while (!oGrid->isFull())
     {
         int c = 0;
@@ -43,6 +42,11 @@ int main()
         }
         oGrid->display();
     }
+    std::cout << "perdu";
+
+    delete oGrid;
+    return 0;
+}
 
     delete oGrid;
     return 0;
