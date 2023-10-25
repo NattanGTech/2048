@@ -8,6 +8,7 @@ Grid::Grid()
 {
     m_iSize = 16;
     m_oGrid = new Case[m_iSize];
+	m_iNbSpace = 1;
     newTiles();
     newTiles();
 }
@@ -15,24 +16,26 @@ Grid::Grid()
 
 void Grid::display()
 {
-   for (int i = 0; i < m_iSize; i++)
-   {
-       if (m_oGrid[i].m_iValue == 0) {
-           std::cout << "[ ]";
-       }
-       else {
-           std::cout << "["<<std::to_string(m_oGrid[i].m_iValue).c_str() << "]";
-       }
-        
+    //std::string sSpace(m_iNbSpace, " ");
+    system("cls");
+    for (int i = 0; i < m_iSize; i++)
+    {
+        if (m_oGrid[i].m_iValue == 0) {
+            std::cout << "[ ]";
+        }
+        else {
+            std::cout << "[ " << std::to_string(m_oGrid[i].m_iValue).c_str() << " ]";
+        }
+
         if (i % 4 == 3)
         {
             std::cout << std::endl;
         }
-   }
+    }
 }
 
 bool Grid::isFull() {
-    if (freePosition().empty())
+    if (vifreePosition.empty())
     {
         return true;
     }
@@ -43,98 +46,148 @@ Grid::~Grid()
     delete[] m_oGrid;
 }
 
-std::vector<int> Grid::freePosition() {
-    std::vector<int> vifreePosition;
+void Grid::freePosition() {
+    vifreePosition.clear();
     for (int i = 0; i < m_iSize; i++)
     {
         if (m_oGrid[i].m_iValue == 0)
-        {	
+        {
             vifreePosition.push_back(i);
         }
     }
-    return vifreePosition;
 }
 
-void Grid::newTiles(){
-    int iPossibleValue[2] = {2, 4};
-    int position = freePosition()[rand() % freePosition().size()];
+void Grid::newTiles() {
+    int iPossibleValue[2] = { 2, 4 };
+    freePosition();
+    int position = vifreePosition[rand() % vifreePosition.size()];
     m_oGrid[position].m_iValue = iPossibleValue[rand() % 2];
     m_oGrid[position].m_cSymbol = std::to_string(m_oGrid[position].m_iValue).c_str();
 }
 
-void Grid::leftMovement() {
-    for (int i = 0; i < m_iSize; i++) {
-        if (i % 4 != 0 && m_oGrid[i].m_iValue != 0) {
-            if (m_oGrid[i - 1].m_iValue != 0) {
-                if (m_oGrid[i - 1].m_iValue == m_oGrid[i].m_iValue) {
-                    m_oGrid[i - 1].m_iValue += m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                }
-            }
-            else {
-                while(i%4 != 0 && m_oGrid[i - 1].m_iValue == 0){
-                    m_oGrid[i - 1].m_iValue = m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                    i--;
-                }
-            }
-        }
+void Grid::fusion(int iBefore, int iIndice) {
+    m_oGrid[iBefore].m_iValue += m_oGrid[iIndice].m_iValue;
+    m_oGrid[iIndice].m_iValue = 0;
+    if (m_iNbSpace < m_oGrid[iBefore].m_iValue){
+		m_iNbSpace = ((m_oGrid[iBefore].m_iValue / 10) % 10) + 1;
     }
 }
+void Grid::leftMovement(){
+    m_bMove = false;
+    for(int i = 0; i < m_iSize; i++){
+        leftMovement(i);
+    }
+    if (m_bMove){
+		newTiles();
+    }
+}
+
+void Grid::leftMovement(int iCasePosition) {
+    if (iCasePosition % 4 != 0 && m_oGrid[iCasePosition].m_iValue != 0) {
+        if (m_oGrid[iCasePosition - 1].m_iValue != 0) {
+            if (m_oGrid[iCasePosition - 1].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+                fusion(iCasePosition - 1, iCasePosition);
+				iCasePosition--;
+				m_bMove = true;
+                leftMovement(iCasePosition);
+            }
+        }
+        else {
+            m_oGrid[iCasePosition - 1].m_iValue = m_oGrid[iCasePosition].m_iValue;
+            m_oGrid[iCasePosition].m_iValue = 0;
+            iCasePosition--;
+			m_bMove = true;
+            leftMovement(iCasePosition);
+        }
+    }
+    
+}
+
 void Grid::rightMovement() {
+    m_bMove = false;
     for (int i = m_iSize - 1; i >= 0; i--) {
-        if (i % 4 != 3 && m_oGrid[i].m_iValue != 0) {
-            if (m_oGrid[i + 1].m_iValue != 0) {
-                if (m_oGrid[i + 1].m_iValue == m_oGrid[i].m_iValue) {
-                    m_oGrid[i + 1].m_iValue += m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                }
+        rightMovement(i);
+    }
+	if (m_bMove) {
+		newTiles();
+	}
+}
+
+void Grid::rightMovement(int iCasePosition) {
+    if (iCasePosition % 4 != 3 && m_oGrid[iCasePosition].m_iValue != 0) {
+        if (m_oGrid[iCasePosition + 1].m_iValue != 0) {
+            if (m_oGrid[iCasePosition + 1].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+                fusion(iCasePosition + 1, iCasePosition);
+                iCasePosition++;
+                m_bMove = true;
+                rightMovement(iCasePosition);
             }
-            else {
-                while (i % 4 != 3 && m_oGrid[i + 1].m_iValue == 0) {
-                    m_oGrid[i + 1].m_iValue = m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                    i++;
-                }
-            }
+        }
+        else {
+            m_oGrid[iCasePosition + 1].m_iValue = m_oGrid[iCasePosition].m_iValue;
+            m_oGrid[iCasePosition].m_iValue = 0;
+            iCasePosition++;
+            m_bMove = true;
+            rightMovement(iCasePosition);
         }
     }
 }
+
 void Grid::upMovement() {
+    m_bMove = false;
     for (int i = 0; i < m_iSize; i++) {
-        if (i >= 4 && m_oGrid[i].m_iValue != 0) {
-            if (m_oGrid[i - 4].m_iValue != 0) {
-                if (m_oGrid[i - 4].m_iValue == m_oGrid[i].m_iValue) {
-                    m_oGrid[i - 4].m_iValue += m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                }
+        upMovement(i);
+    }
+	if (m_bMove) {
+		newTiles();
+	}
+}
+
+void Grid::upMovement(int iCasePosition) {
+    if (iCasePosition >= 4 && m_oGrid[iCasePosition].m_iValue != 0) {
+        if (m_oGrid[iCasePosition - 4].m_iValue != 0) {
+            if (m_oGrid[iCasePosition - 4].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+                fusion(iCasePosition - 4, iCasePosition);
+                iCasePosition -= 4;
+                m_bMove = true;
+                upMovement(iCasePosition);
             }
-            else {
-                while (i >= 4 && m_oGrid[i - 4].m_iValue == 0) {
-                    m_oGrid[i - 4].m_iValue = m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                    i--;
-                }
-            }
+        }
+        else {
+            m_oGrid[iCasePosition - 4].m_iValue = m_oGrid[iCasePosition].m_iValue;
+            m_oGrid[iCasePosition].m_iValue = 0;
+            iCasePosition -= 4;
+            m_bMove = true;
+            upMovement(iCasePosition);
         }
     }
 }
 void Grid::downMovement() {
+    m_bMove = false;
     for (int i = m_iSize - 1; i >= 0; i--) {
-        if (i <= 11 && m_oGrid[i].m_iValue != 0) {
-            if (m_oGrid[i + 4].m_iValue != 0) {
-                if (m_oGrid[i + 4].m_iValue == m_oGrid[i].m_iValue) {
-                    m_oGrid[i + 4].m_iValue += m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                }
-            }
-            else {
-                while (i <= 11 && m_oGrid[i + 4].m_iValue == 0) {
-                    m_oGrid[i + 4].m_iValue = m_oGrid[i].m_iValue;
-                    m_oGrid[i].m_iValue = 0;
-                    i++;
-                }
+        downMovement(i);
+    }
+	if (m_bMove) {
+		newTiles();
+	}
+}
+void Grid::downMovement(int iCasePosition) {
+    if (iCasePosition <= 11 && m_oGrid[iCasePosition].m_iValue != 0) {
+        if (m_oGrid[iCasePosition + 4].m_iValue != 0) {
+            if (m_oGrid[iCasePosition + 4].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+                fusion(iCasePosition + 4, iCasePosition);
+                iCasePosition += 4;
+                m_bMove = true;
+                downMovement(iCasePosition);
             }
         }
+        else {
+            m_oGrid[iCasePosition + 4].m_iValue = m_oGrid[iCasePosition].m_iValue;
+            m_oGrid[iCasePosition].m_iValue = 0;
+            iCasePosition += 4;
+            m_bMove = true;
+            downMovement(iCasePosition);
+        }
     }
+
 }
