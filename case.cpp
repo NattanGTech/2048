@@ -1,4 +1,4 @@
-#include "case.h";
+#include "../2048/2048/case.h";
 #include <iostream>
 
 Case::Case()
