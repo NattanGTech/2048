@@ -1,9 +1,15 @@
 #pragma once
+#pragma once
 #include <vector>
 #include "case.h";
 
 class Grid
 {
+private:
+    std::vector<int> vifreePosition;
+    bool m_bMove;
+    int m_iNbSpace;
+
 public:
 
     int m_iSize;
@@ -13,11 +19,21 @@ public:
 
     void display();
     bool isFull();
-    std::vector<int> freePosition();
-    void newTiles();
     void leftMovement();
     void rightMovement();
     void upMovement();
     void downMovement();
-   ~Grid();
+   
+
+private:
+    void newTiles();
+    void fusion(int iBefore, int iIndice);
+    void leftMovement(int iCasePosition);
+    void rightMovement(int iCasePosition);
+    void upMovement(int iCasePosition);
+    void downMovement(int iCasePosition);
+    void freePosition();
+
+public:
+    ~Grid();
 };
