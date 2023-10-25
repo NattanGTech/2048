@@ -5,6 +5,7 @@
 #include "grid.h"
 #include <stdlib.h> 
 #include <time.h>
+#include <conio.h>
 #include <windows.h>
 
 #define KEY_UP 72
@@ -18,34 +19,31 @@ int main()
     Grid* oGrid = new Grid();
     oGrid->display();
     bool bGameActive = true;
+    bool badKey = true;
     int flag = 1;
-
-    while (flag) {
-        if (GetKeyState(VK_LBUTTON) & 0x8000) {
-            oGrid->leftMovement();
-            oGrid->newTiles();
-            oGrid->display();
-            flag = 0;
-        }
-        else if (GetKeyState(VK_RBUTTON) & 0x8000) {
-            oGrid->rightMovement();
-            oGrid->newTiles();
-            oGrid->display();
-            flag = 0;
-        }
-        else if (GetKeyState(VK_TAB) & 0x8000) {
+    while (!oGrid->isFull())
+    {
+        int c = 0;
+        switch ((c = _getch()))
+        {
+        case KEY_UP:
             oGrid->upMovement();
-            oGrid->newTiles();
-            oGrid->display();
-            flag = 0;
-        }
-        else if (GetKeyState(VK_SHIFT) & 0x8000) {
+            break;
+        case KEY_DOWN:
             oGrid->downMovement();
-            oGrid->newTiles();
-            oGrid->display();
-            flag = 0;
+            break;
+        case KEY_RIGHT:
+            oGrid->rightMovement();
+            break;
+        case KEY_LEFT:
+            oGrid->leftMovement();
+            break;
+        default:
+            break;
         }
+        oGrid->display();
     }
-	delete oGrid;
-	return 0;
+
+    delete oGrid;
+    return 0;
 }
