@@ -8,7 +8,7 @@ Grid::Grid()
 {
     m_iSize = 16;
     m_oGrid = new Case[m_iSize];
-	m_iNbSpace = 1;
+    m_iNbSpace = 1;
     newTiles();
     newTiles();
 }
@@ -16,15 +16,18 @@ Grid::Grid()
 
 void Grid::display()
 {
-    //std::string sSpace(m_iNbSpace, " ");
     system("cls");
+    std::string sSpace;
+    for (int i = 0; i < m_iNbSpace; i++) {
+        sSpace += " ";
+    }
     for (int i = 0; i < m_iSize; i++)
     {
         if (m_oGrid[i].m_iValue == 0) {
             std::cout << "[ ]";
         }
         else {
-            std::cout << "[ " << std::to_string(m_oGrid[i].m_iValue).c_str() << " ]";
+            std::cout << "[" << std::to_string(m_oGrid[i].m_iValue).c_str() << "]";
         }
 
         if (i % 4 == 3)
@@ -35,10 +38,12 @@ void Grid::display()
 }
 
 bool Grid::isFull() {
+    freePosition();
     if (vifreePosition.empty())
     {
         return true;
     }
+    return false;
 }
 
 Grid::~Grid()
@@ -68,17 +73,17 @@ void Grid::newTiles() {
 void Grid::fusion(int iBefore, int iIndice) {
     m_oGrid[iBefore].m_iValue += m_oGrid[iIndice].m_iValue;
     m_oGrid[iIndice].m_iValue = 0;
-    if (m_iNbSpace < m_oGrid[iBefore].m_iValue){
-		m_iNbSpace = ((m_oGrid[iBefore].m_iValue / 10) % 10) + 1;
+    if (m_iNbSpace < m_oGrid[iBefore].m_iValue) {
+        m_iNbSpace = log10(m_oGrid[iBefore].m_iValue) + 1;
     }
 }
-void Grid::leftMovement(){
+void Grid::leftMovement() {
     m_bMove = false;
-    for(int i = 0; i < m_iSize; i++){
+    for (int i = 0; i < m_iSize; i++) {
         leftMovement(i);
     }
-    if (m_bMove){
-		newTiles();
+    if (m_bMove) {
+        newTiles();
     }
 }
 
@@ -87,8 +92,8 @@ void Grid::leftMovement(int iCasePosition) {
         if (m_oGrid[iCasePosition - 1].m_iValue != 0) {
             if (m_oGrid[iCasePosition - 1].m_iValue == m_oGrid[iCasePosition].m_iValue) {
                 fusion(iCasePosition - 1, iCasePosition);
-				iCasePosition--;
-				m_bMove = true;
+                iCasePosition--;
+                m_bMove = true;
                 leftMovement(iCasePosition);
             }
         }
@@ -96,11 +101,11 @@ void Grid::leftMovement(int iCasePosition) {
             m_oGrid[iCasePosition - 1].m_iValue = m_oGrid[iCasePosition].m_iValue;
             m_oGrid[iCasePosition].m_iValue = 0;
             iCasePosition--;
-			m_bMove = true;
+            m_bMove = true;
             leftMovement(iCasePosition);
         }
     }
-    
+
 }
 
 void Grid::rightMovement() {
@@ -108,9 +113,9 @@ void Grid::rightMovement() {
     for (int i = m_iSize - 1; i >= 0; i--) {
         rightMovement(i);
     }
-	if (m_bMove) {
-		newTiles();
-	}
+    if (m_bMove) {
+        newTiles();
+    }
 }
 
 void Grid::rightMovement(int iCasePosition) {
@@ -138,9 +143,9 @@ void Grid::upMovement() {
     for (int i = 0; i < m_iSize; i++) {
         upMovement(i);
     }
-	if (m_bMove) {
-		newTiles();
-	}
+    if (m_bMove) {
+        newTiles();
+    }
 }
 
 void Grid::upMovement(int iCasePosition) {
@@ -167,9 +172,9 @@ void Grid::downMovement() {
     for (int i = m_iSize - 1; i >= 0; i--) {
         downMovement(i);
     }
-	if (m_bMove) {
-		newTiles();
-	}
+    if (m_bMove) {
+        newTiles();
+    }
 }
 void Grid::downMovement(int iCasePosition) {
     if (iCasePosition <= 11 && m_oGrid[iCasePosition].m_iValue != 0) {
