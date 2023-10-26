@@ -20,32 +20,16 @@ Grid::Grid(int* tab)
     m_oGrid = new Case[m_iSize];
     for (int i = 0; i < m_iSize; i++) {
         m_oGrid[i].m_iValue = tab[i];
-    }   
+    }
     m_iNbMax = 1;
 }
 
 void Grid::display()
 {
     system("cls");
-    std::string sSpace; 
-	std::string sSpaceValue;
-    int iSizeNbMAx = log10(m_iNbMax) + 1;
-    for (int i = 0; i < iSizeNbMAx; i++) {
-        sSpace += " ";
-    }
     for (int i = 0; i < m_iSize; i++)
     {
-        if (m_oGrid[i].m_iValue == 0) {
-            std::cout << "[ " << sSpace <<" ]";
-        }
-        else {
-            sSpaceValue = "";
-            int iSizeNb = log10(m_oGrid[i].m_iValue) + 1;
-			for (int i = 0; i < (iSizeNbMAx - iSizeNb) / 2; i++) {
-				sSpaceValue += " ";
-			}
-            std::cout << "[ " << (iSizeNb % 2 != iSizeNbMAx % 2 ? sSpaceValue + " " : sSpaceValue) << std::to_string(m_oGrid[i].m_iValue).c_str() << sSpaceValue << " ]";
-        }
+        m_oGrid[i].display(m_iNbMax);
 
         if (i % 4 == 3)
         {
@@ -90,18 +74,25 @@ void Grid::fusion(int iBefore, int iIndice) {
     m_oGrid[iBefore].m_iValue += m_oGrid[iIndice].m_iValue;
     m_oGrid[iIndice].m_iValue = 0;
     if (m_iNbMax < m_oGrid[iBefore].m_iValue) {
-		m_iNbMax = m_oGrid[iBefore].m_iValue;
+        m_iNbMax = m_oGrid[iBefore].m_iValue;
     }
 }
 
-void Grid::moveAndGenerateNewtiles(void (Grid::*deplacement)())
+void Grid::moveAndGenerateNewtiles(void (Grid::* move)())
 {
     m_bMove = false;
-    (this->*deplacement)();
+    (this->*move)();
     if (m_bMove) {
         newTiles();
     }
 }
+
+//void Grid::moveLeftOrUp(void (Grid::* move)(int)) {
+//    for (int i = 0; i < m_iSize; i++) {
+//        (this->*move)(i);
+//    }
+//}
+
 void Grid::moveLeft() {
     for (int i = 0; i < m_iSize; i++) {
         moveLeft(i);
