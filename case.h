@@ -9,4 +9,6 @@ public:
 
 	Case();
 
+	void display(int iMax);
+
 };
