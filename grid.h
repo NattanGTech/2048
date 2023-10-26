@@ -1,14 +1,17 @@
 #pragma once
-#pragma once
-#include <vector>
+
 #include "case.h";
+
+#include <vector>
+
 
 class Grid
 {
 private:
     std::vector<int> vifreePosition;
     bool m_bMove;
-    int m_iNbSpace;
+    int m_iSizeNbMax;
+    int m_iNbMax;
 
 public:
 
@@ -16,22 +19,26 @@ public:
     Case* m_oGrid;
 
     Grid();
+    Grid(int* tab);
 
+
+    bool compare(int* tab);
     void display();
     bool isFull();
-    void leftMovement();
-    void rightMovement();
-    void upMovement();
-    void downMovement();
-   
+    void moveLeft();
+    void moveRight();
+    void moveUp();
+    void moveDown();
+    void moveAndGenerateNewtiles(void(Grid::* deplacement)());
+
 
 private:
     void newTiles();
     void fusion(int iBefore, int iIndice);
-    void leftMovement(int iCasePosition);
-    void rightMovement(int iCasePosition);
-    void upMovement(int iCasePosition);
-    void downMovement(int iCasePosition);
+    void moveLeft(int iCasePosition, bool bIsFusion = false);
+    void moveRight(int iCasePosition, bool bIsFusion = false);
+    void moveUp(int iCasePosition, bool bIsFusion = false);
+    void moveDown(int iCasePosition, bool bIsFusion = false);
     void freePosition();
 
 public:
