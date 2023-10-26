@@ -19,7 +19,7 @@
 int main()
 {
     srand(time(NULL));
-   
+
     Grid* oGrid = new Grid();
     oGrid->display();
     test::move();
