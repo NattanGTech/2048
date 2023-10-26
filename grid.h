@@ -29,8 +29,8 @@ public:
     void moveRight();
     void moveUp();
     void moveDown();
-    void moveAndGenerateNewtiles(void(Grid::* deplacement)());
-
+    void moveAndGenerateNewtiles(void (Grid::* move)());
+    /*void moveLeftOrUp(void (Grid::* move)(int));*/
 
 private:
     void newTiles();
