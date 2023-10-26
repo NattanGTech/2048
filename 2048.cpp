@@ -1,12 +1,15 @@
-#include <iostream>
-#include <string>
-#include <vector>
 #include "case.h"
 #include "grid.h"
+#include "test.h"
+
 #include <stdlib.h> 
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
+
+#include <iostream>
+#include <string>
+#include <vector>
 
 #define KEY_UP 72
 #define KEY_DOWN 80
@@ -16,8 +19,10 @@
 int main()
 {
     srand(time(NULL));
+   
     Grid* oGrid = new Grid();
     oGrid->display();
+    test::move();
     bool bGameActive = true;
     bool badKey = true;
     while (!oGrid->isFull())
@@ -26,16 +31,16 @@ int main()
         switch ((c = _getch()))
         {
         case KEY_UP:
-            oGrid->upMovement();
+            oGrid->moveAndGenerateNewtiles(&Grid::moveUp);
             break;
         case KEY_DOWN:
-            oGrid->downMovement();
+            oGrid->moveAndGenerateNewtiles(&Grid::moveDown);
             break;
         case KEY_RIGHT:
-            oGrid->rightMovement();
+            oGrid->moveAndGenerateNewtiles(&Grid::moveRight);
             break;
         case KEY_LEFT:
-            oGrid->leftMovement();
+            oGrid->moveAndGenerateNewtiles(&Grid::moveLeft);
             break;
         default:
             break;
@@ -46,8 +51,5 @@ int main()
 
     delete oGrid;
     return 0;
-}
 
-    delete oGrid;
-    return 0;
 }
