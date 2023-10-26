@@ -1,5 +1,7 @@
 #include "grid.h";
 #include "case.h";
+
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,26 +10,41 @@ Grid::Grid()
 {
     m_iSize = 16;
     m_oGrid = new Case[m_iSize];
-    m_iNbSpace = 1;
+    m_iNbMax = 1;
     newTiles();
     newTiles();
 }
-
+Grid::Grid(int* tab)
+{
+    m_iSize = 16;
+    m_oGrid = new Case[m_iSize];
+    for (int i = 0; i < m_iSize; i++) {
+        m_oGrid[i].m_iValue = tab[i];
+    }   
+    m_iNbMax = 1;
+}
 
 void Grid::display()
 {
     system("cls");
-    std::string sSpace;
-    for (int i = 0; i < m_iNbSpace; i++) {
+    std::string sSpace; 
+	std::string sSpaceValue;
+    int iSizeNbMAx = log10(m_iNbMax) + 1;
+    for (int i = 0; i < iSizeNbMAx; i++) {
         sSpace += " ";
     }
     for (int i = 0; i < m_iSize; i++)
     {
         if (m_oGrid[i].m_iValue == 0) {
-            std::cout << "[ ]";
+            std::cout << "[ " << sSpace <<" ]";
         }
         else {
-            std::cout << "[" << std::to_string(m_oGrid[i].m_iValue).c_str() << "]";
+            sSpaceValue = "";
+            int iSizeNb = log10(m_oGrid[i].m_iValue) + 1;
+			for (int i = 0; i < (iSizeNbMAx - iSizeNb) / 2; i++) {
+				sSpaceValue += " ";
+			}
+            std::cout << "[ " << (iSizeNb % 2 != iSizeNbMAx % 2 ? sSpaceValue + " " : sSpaceValue) << std::to_string(m_oGrid[i].m_iValue).c_str() << sSpaceValue << " ]";
         }
 
         if (i % 4 == 3)
@@ -67,34 +84,38 @@ void Grid::newTiles() {
     freePosition();
     int position = vifreePosition[rand() % vifreePosition.size()];
     m_oGrid[position].m_iValue = iPossibleValue[rand() % 2];
-    m_oGrid[position].m_cSymbol = std::to_string(m_oGrid[position].m_iValue).c_str();
 }
 
 void Grid::fusion(int iBefore, int iIndice) {
     m_oGrid[iBefore].m_iValue += m_oGrid[iIndice].m_iValue;
     m_oGrid[iIndice].m_iValue = 0;
-    if (m_iNbSpace < m_oGrid[iBefore].m_iValue) {
-        m_iNbSpace = log10(m_oGrid[iBefore].m_iValue) + 1;
+    if (m_iNbMax < m_oGrid[iBefore].m_iValue) {
+		m_iNbMax = m_oGrid[iBefore].m_iValue;
     }
 }
-void Grid::leftMovement() {
+
+void Grid::moveAndGenerateNewtiles(void (Grid::*deplacement)())
+{
     m_bMove = false;
-    for (int i = 0; i < m_iSize; i++) {
-        leftMovement(i);
-    }
+    (this->*deplacement)();
     if (m_bMove) {
         newTiles();
     }
 }
+void Grid::moveLeft() {
+    for (int i = 0; i < m_iSize; i++) {
+        moveLeft(i);
+    }
+}
 
-void Grid::leftMovement(int iCasePosition) {
+void Grid::moveLeft(int iCasePosition, bool bIsFusion) {
     if (iCasePosition % 4 != 0 && m_oGrid[iCasePosition].m_iValue != 0) {
         if (m_oGrid[iCasePosition - 1].m_iValue != 0) {
-            if (m_oGrid[iCasePosition - 1].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+            if (m_oGrid[iCasePosition - 1].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
                 fusion(iCasePosition - 1, iCasePosition);
                 iCasePosition--;
                 m_bMove = true;
-                leftMovement(iCasePosition);
+                moveLeft(iCasePosition, true);
             }
         }
         else {
@@ -102,30 +123,26 @@ void Grid::leftMovement(int iCasePosition) {
             m_oGrid[iCasePosition].m_iValue = 0;
             iCasePosition--;
             m_bMove = true;
-            leftMovement(iCasePosition);
+            moveLeft(iCasePosition);
         }
     }
-
 }
 
-void Grid::rightMovement() {
-    m_bMove = false;
+void Grid::moveRight() {
+
     for (int i = m_iSize - 1; i >= 0; i--) {
-        rightMovement(i);
-    }
-    if (m_bMove) {
-        newTiles();
+        moveRight(i);
     }
 }
 
-void Grid::rightMovement(int iCasePosition) {
+void Grid::moveRight(int iCasePosition, bool bIsFusion) {
     if (iCasePosition % 4 != 3 && m_oGrid[iCasePosition].m_iValue != 0) {
         if (m_oGrid[iCasePosition + 1].m_iValue != 0) {
-            if (m_oGrid[iCasePosition + 1].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+            if (m_oGrid[iCasePosition + 1].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
                 fusion(iCasePosition + 1, iCasePosition);
                 iCasePosition++;
                 m_bMove = true;
-                rightMovement(iCasePosition);
+                moveRight(iCasePosition, true);
             }
         }
         else {
@@ -133,29 +150,25 @@ void Grid::rightMovement(int iCasePosition) {
             m_oGrid[iCasePosition].m_iValue = 0;
             iCasePosition++;
             m_bMove = true;
-            rightMovement(iCasePosition);
+            moveRight(iCasePosition);
         }
     }
 }
 
-void Grid::upMovement() {
-    m_bMove = false;
+void Grid::moveUp() {
     for (int i = 0; i < m_iSize; i++) {
-        upMovement(i);
-    }
-    if (m_bMove) {
-        newTiles();
+        moveUp(i);
     }
 }
 
-void Grid::upMovement(int iCasePosition) {
+void Grid::moveUp(int iCasePosition, bool bIsFusion) {
     if (iCasePosition >= 4 && m_oGrid[iCasePosition].m_iValue != 0) {
         if (m_oGrid[iCasePosition - 4].m_iValue != 0) {
-            if (m_oGrid[iCasePosition - 4].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+            if (m_oGrid[iCasePosition - 4].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
                 fusion(iCasePosition - 4, iCasePosition);
                 iCasePosition -= 4;
                 m_bMove = true;
-                upMovement(iCasePosition);
+                moveUp(iCasePosition, true);
             }
         }
         else {
@@ -163,27 +176,24 @@ void Grid::upMovement(int iCasePosition) {
             m_oGrid[iCasePosition].m_iValue = 0;
             iCasePosition -= 4;
             m_bMove = true;
-            upMovement(iCasePosition);
+            moveUp(iCasePosition);
         }
     }
 }
-void Grid::downMovement() {
-    m_bMove = false;
+
+void Grid::moveDown() {
     for (int i = m_iSize - 1; i >= 0; i--) {
-        downMovement(i);
-    }
-    if (m_bMove) {
-        newTiles();
+        moveDown(i);
     }
 }
-void Grid::downMovement(int iCasePosition) {
+void Grid::moveDown(int iCasePosition, bool bIsFusion) {
     if (iCasePosition <= 11 && m_oGrid[iCasePosition].m_iValue != 0) {
         if (m_oGrid[iCasePosition + 4].m_iValue != 0) {
-            if (m_oGrid[iCasePosition + 4].m_iValue == m_oGrid[iCasePosition].m_iValue) {
+            if (m_oGrid[iCasePosition + 4].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
                 fusion(iCasePosition + 4, iCasePosition);
                 iCasePosition += 4;
                 m_bMove = true;
-                downMovement(iCasePosition);
+                moveDown(iCasePosition, true);
             }
         }
         else {
@@ -191,8 +201,17 @@ void Grid::downMovement(int iCasePosition) {
             m_oGrid[iCasePosition].m_iValue = 0;
             iCasePosition += 4;
             m_bMove = true;
-            downMovement(iCasePosition);
+            moveDown(iCasePosition);
         }
     }
 
+}
+
+bool Grid::compare(int* tab) {
+    for (int i = 0; i < m_iSize; i++) {
+        if (m_oGrid[i].m_iValue != tab[i]) {
+            return false;
+        }
+    }
+    return true;
 }
