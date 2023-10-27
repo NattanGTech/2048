@@ -27,6 +27,10 @@ Grid::Grid(int* tab)
 void Grid::display()
 {
     system("cls");
+    if (win() == true) 
+    {
+        std::cout << "Victoire !!!" << std::endl;
+    };
     for (int i = 0; i < m_iSize; i++)
     {
         m_oGrid[i].display(m_iNbMax);
@@ -37,19 +41,40 @@ void Grid::display()
         }
     }
 }
-
 bool Grid::isFull() {
     freePosition();
-    if (vifreePosition.empty())
-    {
+    if (vifreePosition.empty()) {
         return true;
     }
     return false;
 }
 
-Grid::~Grid()
-{
-    delete[] m_oGrid;
+bool Grid::win() {
+    if (m_iNbMax != 2048) {
+        return false;
+    }
+    return true;
+}
+bool Grid::lose() {
+    if (isFull()) {
+        for (int i = 0; i < m_iSize; i++) {
+            if (i % 4 != 0 && m_oGrid[i].m_iValue == m_oGrid[i - 1].m_iValue) {
+                return false;
+            }
+            if (i % 4 != 3 && m_oGrid[i].m_iValue == m_oGrid[i + 1].m_iValue) {
+                return false;
+            }
+            if (i >= 4 && m_oGrid[i].m_iValue == m_oGrid[i - 4].m_iValue) {
+                return false;
+            }
+            if (i <= 11 && m_oGrid[i].m_iValue == m_oGrid[i + 4].m_iValue) {
+                return false;
+            }
+        }
+        return true;
+    }
+    return false;
+     
 }
 
 void Grid::freePosition() {
@@ -177,6 +202,7 @@ void Grid::moveDown() {
         moveDown(i);
     }
 }
+
 void Grid::moveDown(int iCasePosition, bool bIsFusion) {
     if (iCasePosition <= 11 && m_oGrid[iCasePosition].m_iValue != 0) {
         if (m_oGrid[iCasePosition + 4].m_iValue != 0) {
@@ -205,4 +231,10 @@ bool Grid::compare(int* tab) {
         }
     }
     return true;
+}
+
+
+Grid::~Grid()
+{
+    delete[] m_oGrid;
 }
