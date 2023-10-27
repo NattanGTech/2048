@@ -23,8 +23,10 @@ public:
 
 
     bool compare(int* tab);
-    void display();
     bool isFull();
+    bool win();
+    bool lose();
+    void display();
     void moveLeft();
     void moveRight();
     void moveUp();
