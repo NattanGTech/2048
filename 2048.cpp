@@ -23,9 +23,11 @@ int main()
     Grid* oGrid = new Grid();
     oGrid->display();
     test::move();
+    test::win();
+    test::lose();
     bool bGameActive = true;
     bool badKey = true;
-    while (!oGrid->isFull())
+    while (!oGrid->lose())
     {
         int c = 0;
         switch ((c = _getch()))
