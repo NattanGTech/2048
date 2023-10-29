@@ -25,8 +25,6 @@ int main()
     test::move();
     test::win();
     test::lose();
-    bool bGameActive = true;
-    bool badKey = true;
     while (!oGrid->lose())
     {
         int c = 0;
