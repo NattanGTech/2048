@@ -27,7 +27,7 @@ Grid::Grid(int* tab)
 void Grid::display()
 {
     system("cls");
-    if (win() == true) 
+    if (win() == true)
     {
         std::cout << "Victoire !!!" << std::endl;
     };
@@ -74,7 +74,7 @@ bool Grid::lose() {
         return true;
     }
     return false;
-     
+
 }
 
 void Grid::freePosition() {
@@ -111,12 +111,6 @@ void Grid::moveAndGenerateNewtiles(void (Grid::* move)())
         newTiles();
     }
 }
-
-//void Grid::moveLeftOrUp(void (Grid::* move)(int)) {
-//    for (int i = 0; i < m_iSize; i++) {
-//        (this->*move)(i);
-//    }
-//}
 
 void Grid::moveLeft() {
     for (int i = 0; i < m_iSize; i++) {
