@@ -1,6 +1,7 @@
 #include "case.h"
 #include "grid.h"
 #include "test.h"
+#include "window.h"
 
 #include <SDL.h>
 #include <stdlib.h> 
@@ -19,18 +20,16 @@
 #define KEY_RIGHT 77
 
 
-void close(SDL_Window* sdlWindow, SDL_Renderer* sdlRenderer);
+//void close(SDL_Window* sdlWindow, SDL_Renderer* sdlRenderer);
 
 #undef main
 int main()
 {
     srand(time(NULL));
-    SDL_Window* sdlWindow = NULL;
-    SDL_Renderer* sdlRenderer = NULL;
-	SDL_Event sdlEvent;
-    SDL_bool sdlQuit = SDL_FALSE;
-    SDL_Color sdlBackground = { 187,173,160,255 };
-    SDL_Color sdlEmptyCase = { 205,193,180,255 };
+    
+	/*SDL_Event sdlEvent;
+    SDL_bool sdlQuit = SDL_FALSE;*/
+    /*SDL_Color sdlEmptyCase = { 205,193,180,255 };
     SDL_Color sdlCaseNum2 = { 238,228,218,255 };
 	SDL_Color sdlCaseNum4 = { 237,224,200,255 };
     SDL_Color sdlCaseNum8 = { 242,177,121,255 };
@@ -43,40 +42,10 @@ int main()
 	SDL_Color sdlCaseNum1024 = { 237,197,63,255 };
 	SDL_Color sdlCaseNum2048 = { 237,194,46,255 };
 	SDL_Color sdlCaseNum4096 = { 119,161,54,255 };
-	SDL_Color sdlCaseNum8192 = { 45,179,136,255 };
-    int iStatut = EXIT_FAILURE;
+	SDL_Color sdlCaseNum8192 = { 45,179,136,255 };*/
+    /*int iStatut = EXIT_FAILURE;*/
 
-    if (0 != SDL_Init(SDL_INIT_EVERYTHING))
-    {
-        fprintf(stderr, "Erreur SDL_Init : %s", SDL_GetError());
-        close(sdlWindow, sdlRenderer);
-    }
-    
-    sdlWindow = SDL_CreateWindow("2048", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		640, 480, SDL_WINDOW_SHOWN);
-
-    if (NULL == sdlWindow)
-    {
-        fprintf(stderr, "Erreur SDL_CreateWindow : %s", SDL_GetError());
-        close(sdlWindow, sdlRenderer);
-    }
-
-    sdlRenderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_ACCELERATED);
-
-    if (NULL == sdlRenderer)
-    {
-        fprintf(stderr, "Erreur SDL_CreateRenderer : %s", SDL_GetError());
-        close(sdlWindow, sdlRenderer);
-	}
-
-    SDL_RaiseWindow(sdlWindow);
-
-    SDL_SetRenderDrawColor(sdlRenderer, sdlBackground.r, sdlBackground.g, sdlBackground.b, sdlBackground.a);
-    SDL_Rect screen = { 0,0,640,480 };
-    SDL_RenderFillRect(sdlRenderer, &screen);
-   
-    SDL_RenderPresent(sdlRenderer);
-
+    Window* oWindow = new Window();
     Grid* oGrid = new Grid();
     oGrid->display();
     test::move();
@@ -121,10 +90,10 @@ int main()
     return 0;
 
 }
-void close(SDL_Window* window, SDL_Renderer* renderer){
-    if (NULL != window)
-        SDL_DestroyWindow(window);
-    if (NULL != renderer)
-        SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-}
+//void close(SDL_Window* window, SDL_Renderer* renderer){
+//    if (NULL != window)
+//        SDL_DestroyWindow(window);
+//    if (NULL != renderer)
+//        SDL_DestroyRenderer(renderer);
+//    SDL_Quit();
+//}
