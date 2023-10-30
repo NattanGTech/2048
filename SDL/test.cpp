@@ -8,9 +8,9 @@ namespace test
 {
 	void move() {
 		int tab[16] = { 2,2,0,0,
-					    4,0,0,0,
+						4,0,0,0,
 						8,16,0,0,
-					    0,0,0,0 };
+						0,0,0,0 };
 
 		int endTab[16] = { 0,0,0,0,
 						   0,0,0,0,
@@ -21,7 +21,6 @@ namespace test
 		oGrid->moveUp();
 		oGrid->moveDown();
 		oGrid->moveRight();
-		/*oGrid->win();*/
 		if (oGrid->compare(endTab)) {
 			std::cout << "Test de deplacement et de fusion reussi" << std::endl;
 		}
@@ -31,7 +30,7 @@ namespace test
 	}
 	void win() {
 		int tab[16] = { 0,0,0,0,
-					    0,0,0,0,
+						0,0,0,0,
 						0,0,0,0,
 						1024,1024,0,0 };
 		int endTab[16] = { 0,0,0,0,
