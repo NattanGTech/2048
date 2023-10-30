@@ -1,7 +1,10 @@
 #pragma once
+#include "gameObject.h";
+
 #include <string>
 
-class Case
+
+class Case : GameObject
 {
 public:
 
