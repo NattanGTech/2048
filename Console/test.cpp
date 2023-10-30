@@ -7,55 +7,58 @@
 namespace test
 {
 	void move() {
-		int tab[16] = { 2,2,0,0,
-					    4,0,0,0,
+		int iTab[16] = { 2,2,0,0,
+						4,0,0,0,
 						8,16,0,0,
-					    0,0,0,0 };
+						0,0,0,0 };
 
-		int endTab[16] = { 0,0,0,0,
+		int iEndTab[16] = { 0,0,0,0,
 						   0,0,0,0,
 						   0,0,0,0,
 						   0,0,0,32 };
-		Grid* oGrid = new Grid(tab);
+		Grid* oGrid = new Grid(iTab);
 		oGrid->moveLeft();
 		oGrid->moveUp();
 		oGrid->moveDown();
 		oGrid->moveRight();
 		/*oGrid->win();*/
-		if (oGrid->compare(endTab)) {
-			std::cout << "Test de deplacement et de fusion reussi" << std::endl;
+		if (oGrid->compare(iEndTab)) {
+			std::cout << "Test de deplacement et de fusion : Success" << std::endl;
 		}
 		else {
-			std::cout << "echec" << std::endl;
+			std::cout << "Test de deplacement et de fusion : Failure" << std::endl;
 		};
 	}
 	void win() {
-		int tab[16] = { 0,0,0,0,
-					    0,0,0,0,
+		int iTab[16] = { 0,0,0,0,
+						0,0,0,0,
 						0,0,0,0,
 						1024,1024,0,0 };
-		int endTab[16] = { 0,0,0,0,
+		int iEndTab[16] = { 0,0,0,0,
 						   0,0,0,0,
 						   0,0,0,0,
 						   2048,0,0,0 };
-		Grid* oGrid = new Grid(tab);
+		Grid* oGrid = new Grid(iTab);
 		oGrid->moveLeft();
 		oGrid->win();
-		if (oGrid->compare(endTab)) {
-			std::cout << "Test Victoire success" << std::endl;
+		if (oGrid->compare(iEndTab)) {
+			std::cout << "Test de Victoire : Success" << std::endl;
 		}
 		else {
-			std::cout << "echec" << std::endl;
+			std::cout << "Test de Victoire : Failure" << std::endl;
 		};
 	}
 	void lose() {
-		int tab[16] = { 2,4,8,2,
+		int iTab[16] = { 2,4,8,2,
 						4,2,16,4,
 						2,4,2,16,
 						32,16,32,8 };
-		Grid* oGrid = new Grid(tab);
+		Grid* oGrid = new Grid(iTab);
 		if (oGrid->lose()) {
-			std::cout << "Le joueur a perdu" << std::endl;
+			std::cout << "Test de Defaite : Success" << std::endl;
+		}
+		else {
+			std::cout << "Test de Defaite : Failure" << std::endl;
 		};
 	}
 }
