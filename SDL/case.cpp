@@ -1,10 +1,10 @@
-#include "case.h";
+#include "case.h"
 
 #include <iostream>
 
-Case::Case()
+Case::Case() : GameObject(0, 0, 100, 100, { 205,193,180,255 })
 {
-	m_iValue = 0;
+    m_iValue = 0;
 }
 
 void Case::display(int iMax) {
