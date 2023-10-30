@@ -1,5 +1,6 @@
 #include "grid.h";
 #include "case.h";
+#include "gameObject.h"
 
 
 #include <iostream>
@@ -27,13 +28,14 @@ Grid::Grid(int* tab)
 void Grid::display()
 {
     system("cls");
-    if (win() == true) 
+    if (win() == true)
     {
         std::cout << "Victoire !!!" << std::endl;
     };
     for (int i = 0; i < m_iSize; i++)
     {
         m_oGrid[i].display(m_iNbMax);
+        GameObject* oCase = new GameObject(16 + (100 * i), 16 + (100 * i % 4), 100, 100, { 205,193,180,255 });
 
         if (i % 4 == 3)
         {
@@ -74,7 +76,7 @@ bool Grid::lose() {
         return true;
     }
     return false;
-     
+
 }
 
 void Grid::freePosition() {
@@ -111,12 +113,6 @@ void Grid::moveAndGenerateNewtiles(void (Grid::* move)())
         newTiles();
     }
 }
-
-//void Grid::moveLeftOrUp(void (Grid::* move)(int)) {
-//    for (int i = 0; i < m_iSize; i++) {
-//        (this->*move)(i);
-//    }
-//}
 
 void Grid::moveLeft() {
     for (int i = 0; i < m_iSize; i++) {
