@@ -11,4 +11,5 @@ public:
 
 	void display(int iMax);
 
+	~Case();
 };
