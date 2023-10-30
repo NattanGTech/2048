@@ -32,7 +32,6 @@ public:
     void moveUp();
     void moveDown();
     void moveAndGenerateNewtiles(void (Grid::* move)());
-    /*void moveLeftOrUp(void (Grid::* move)(int));*/
 
 private:
     void newTiles();
