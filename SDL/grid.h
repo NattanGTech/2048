@@ -16,9 +16,9 @@ private:
 public:
 
     int m_iSize;
-    Case* m_oGrid;
+    Case* m_oGrid[16];
 
-    Grid();
+    Grid(Window* oWindow);
     Grid(int* tab);
 
 
