@@ -10,7 +10,7 @@ public:
 
 	int m_iValue;
 
-	Case();
+	Case(int iX, int iY, int iWitdh, int iLength, SDL_Color sdlColor, Window* oWindow);
 
 	void display(int iMax);
 
