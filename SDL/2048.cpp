@@ -25,14 +25,14 @@
 #undef main
 int main()
 {
-    srand(time(NULL));
-    
+	srand(time(NULL));
+
 	/*SDL_Event sdlEvent;
-    SDL_bool sdlQuit = SDL_FALSE;*/
-    /*SDL_Color sdlEmptyCase = { 205,193,180,255 };
-    SDL_Color sdlCaseNum2 = { 238,228,218,255 };
+	SDL_bool sdlQuit = SDL_FALSE;*/
+	/*SDL_Color sdlEmptyCase = { 205,193,180,255 };
+	SDL_Color sdlCaseNum2 = { 238,228,218,255 };
 	SDL_Color sdlCaseNum4 = { 237,224,200,255 };
-    SDL_Color sdlCaseNum8 = { 242,177,121,255 };
+	SDL_Color sdlCaseNum8 = { 242,177,121,255 };
 	SDL_Color sdlCaseNum16 = { 245,149,99,255 };
 	SDL_Color sdlCaseNum32 = { 246,124,95,255 };
 	SDL_Color sdlCaseNum64 = { 246,94,59,255 };
@@ -43,23 +43,23 @@ int main()
 	SDL_Color sdlCaseNum2048 = { 237,194,46,255 };
 	SDL_Color sdlCaseNum4096 = { 119,161,54,255 };
 	SDL_Color sdlCaseNum8192 = { 45,179,136,255 };*/
-    /*int iStatut = EXIT_FAILURE;*/
+	/*int iStatut = EXIT_FAILURE;*/
 
-    Window* oWindow = new Window();
-    Grid* oGrid = new Grid();
-    oGrid->display();
-    test::move();
-    test::win();
-    test::lose();
+	Window* oWindow = new Window();
+	Grid* oGrid = new Grid(oWindow);
+	oGrid->display();
+	test::move();
+	test::win();
+	test::lose();
 
-    /*while(!quit){
+	/*while(!quit){
 		while (SDL_PollEvent(&event) && !quit){
-            std::cout << "a";
-            if (event.type == SDL_QUIT) {
-                quit = SDL_TRUE;
-                close(window, renderer);
-            }
-        }*/
+			std::cout << "a";
+			if (event.type == SDL_QUIT) {
+				quit = SDL_TRUE;
+				close(window, renderer);
+			}
+		}*/
 	while (!oGrid->lose())
 	{
 		int c = 0;
@@ -82,12 +82,12 @@ int main()
 		}
 		oGrid->display();
 	}
-    /*}*/
-   
-    std::cout << "perdu";
+	/*}*/
 
-    delete oGrid;
-    return 0;
+	std::cout << "perdu";
+
+	delete oGrid;
+	return 0;
 
 }
 //void close(SDL_Window* window, SDL_Renderer* renderer){
