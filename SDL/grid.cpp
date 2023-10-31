@@ -7,10 +7,14 @@
 #include <string>
 #include <vector>
 
-Grid::Grid()
+Grid::Grid(Window* oWindow)
 {
     m_iSize = 16;
-    m_oGrid = new Case[m_iSize];
+    
+    // m_oGrid = new Case[m_iSize];
+    for (int i = 0; i < m_iSize; i++) {
+        m_oGrid[i] = new Case(16 + (i % 4) * 100, 16 + (i / 4) * 100, 100, 100, { 205,193,180,255 }, oWindow);
+    }  
     m_iNbMax = 1;
     newTiles();
     newTiles();
@@ -18,11 +22,11 @@ Grid::Grid()
 Grid::Grid(int* tab)
 {
     m_iSize = 16;
-    m_oGrid = new Case[m_iSize];
-    for (int i = 0; i < m_iSize; i++) {
-        m_oGrid[i].m_iValue = tab[i];
-    }
-    m_iNbMax = 1;
+    // m_oGrid = new Case[m_iSize];
+    // for (int i = 0; i < m_iSize; i++) {
+    //     m_oGrid[i].m_iValue = tab[i];
+    // }
+    // m_iNbMax = 1;
 }
 
 void Grid::display()
@@ -34,8 +38,8 @@ void Grid::display()
     };
     for (int i = 0; i < m_iSize; i++)
     {
-        m_oGrid[i].display(m_iNbMax);
-        GameObject* oCase = new GameObject(16 + (100 * i), 16 + (100 * i % 4), 100, 100, { 205,193,180,255 });
+        m_oGrid[i]->display(m_iNbMax);
+        // GameObject* oCase = new GameObject(16 + (100 * i), 16 + (100 * i % 4), 100, 100, { 205,193,180,255 }, window);
 
         if (i % 4 == 3)
         {
@@ -60,16 +64,16 @@ bool Grid::win() {
 bool Grid::lose() {
     if (isFull()) {
         for (int i = 0; i < m_iSize; i++) {
-            if (i % 4 != 0 && m_oGrid[i].m_iValue == m_oGrid[i - 1].m_iValue) {
+            if (i % 4 != 0 && m_oGrid[i]->m_iValue == m_oGrid[i - 1]->m_iValue) {
                 return false;
             }
-            if (i % 4 != 3 && m_oGrid[i].m_iValue == m_oGrid[i + 1].m_iValue) {
+            if (i % 4 != 3 && m_oGrid[i]->m_iValue == m_oGrid[i + 1]->m_iValue) {
                 return false;
             }
-            if (i >= 4 && m_oGrid[i].m_iValue == m_oGrid[i - 4].m_iValue) {
+            if (i >= 4 && m_oGrid[i]->m_iValue == m_oGrid[i - 4]->m_iValue) {
                 return false;
             }
-            if (i <= 11 && m_oGrid[i].m_iValue == m_oGrid[i + 4].m_iValue) {
+            if (i <= 11 && m_oGrid[i]->m_iValue == m_oGrid[i + 4]->m_iValue) {
                 return false;
             }
         }
@@ -83,7 +87,7 @@ void Grid::freePosition() {
     vifreePosition.clear();
     for (int i = 0; i < m_iSize; i++)
     {
-        if (m_oGrid[i].m_iValue == 0)
+        if (m_oGrid[i]->m_iValue == 0)
         {
             vifreePosition.push_back(i);
         }
@@ -94,14 +98,14 @@ void Grid::newTiles() {
     int iPossibleValue[2] = { 2, 4 };
     freePosition();
     int position = vifreePosition[rand() % vifreePosition.size()];
-    m_oGrid[position].m_iValue = iPossibleValue[rand() % 2];
+    m_oGrid[position]->m_iValue = iPossibleValue[rand() % 2];
 }
 
 void Grid::fusion(int iBefore, int iIndice) {
-    m_oGrid[iBefore].m_iValue += m_oGrid[iIndice].m_iValue;
-    m_oGrid[iIndice].m_iValue = 0;
-    if (m_iNbMax < m_oGrid[iBefore].m_iValue) {
-        m_iNbMax = m_oGrid[iBefore].m_iValue;
+    m_oGrid[iBefore]->m_iValue += m_oGrid[iIndice]->m_iValue;
+    m_oGrid[iIndice]->m_iValue = 0;
+    if (m_iNbMax < m_oGrid[iBefore]->m_iValue) {
+        m_iNbMax = m_oGrid[iBefore]->m_iValue;
     }
 }
 
@@ -121,9 +125,9 @@ void Grid::moveLeft() {
 }
 
 void Grid::moveLeft(int iCasePosition, bool bIsFusion) {
-    if (iCasePosition % 4 != 0 && m_oGrid[iCasePosition].m_iValue != 0) {
-        if (m_oGrid[iCasePosition - 1].m_iValue != 0) {
-            if (m_oGrid[iCasePosition - 1].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
+    if (iCasePosition % 4 != 0 && m_oGrid[iCasePosition]->m_iValue != 0) {
+        if (m_oGrid[iCasePosition - 1]->m_iValue != 0) {
+            if (m_oGrid[iCasePosition - 1]->m_iValue == m_oGrid[iCasePosition]->m_iValue && !bIsFusion) {
                 fusion(iCasePosition - 1, iCasePosition);
                 iCasePosition--;
                 m_bMove = true;
@@ -131,8 +135,8 @@ void Grid::moveLeft(int iCasePosition, bool bIsFusion) {
             }
         }
         else {
-            m_oGrid[iCasePosition - 1].m_iValue = m_oGrid[iCasePosition].m_iValue;
-            m_oGrid[iCasePosition].m_iValue = 0;
+            m_oGrid[iCasePosition - 1]->m_iValue = m_oGrid[iCasePosition]->m_iValue;
+            m_oGrid[iCasePosition]->m_iValue = 0;
             iCasePosition--;
             m_bMove = true;
             moveLeft(iCasePosition);
@@ -148,9 +152,9 @@ void Grid::moveRight() {
 }
 
 void Grid::moveRight(int iCasePosition, bool bIsFusion) {
-    if (iCasePosition % 4 != 3 && m_oGrid[iCasePosition].m_iValue != 0) {
-        if (m_oGrid[iCasePosition + 1].m_iValue != 0) {
-            if (m_oGrid[iCasePosition + 1].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
+    if (iCasePosition % 4 != 3 && m_oGrid[iCasePosition]->m_iValue != 0) {
+        if (m_oGrid[iCasePosition + 1]->m_iValue != 0) {
+            if (m_oGrid[iCasePosition + 1]->m_iValue == m_oGrid[iCasePosition]->m_iValue && !bIsFusion) {
                 fusion(iCasePosition + 1, iCasePosition);
                 iCasePosition++;
                 m_bMove = true;
@@ -158,8 +162,8 @@ void Grid::moveRight(int iCasePosition, bool bIsFusion) {
             }
         }
         else {
-            m_oGrid[iCasePosition + 1].m_iValue = m_oGrid[iCasePosition].m_iValue;
-            m_oGrid[iCasePosition].m_iValue = 0;
+            m_oGrid[iCasePosition + 1]->m_iValue = m_oGrid[iCasePosition]->m_iValue;
+            m_oGrid[iCasePosition]->m_iValue = 0;
             iCasePosition++;
             m_bMove = true;
             moveRight(iCasePosition);
@@ -174,9 +178,9 @@ void Grid::moveUp() {
 }
 
 void Grid::moveUp(int iCasePosition, bool bIsFusion) {
-    if (iCasePosition >= 4 && m_oGrid[iCasePosition].m_iValue != 0) {
-        if (m_oGrid[iCasePosition - 4].m_iValue != 0) {
-            if (m_oGrid[iCasePosition - 4].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
+    if (iCasePosition >= 4 && m_oGrid[iCasePosition]->m_iValue != 0) {
+        if (m_oGrid[iCasePosition - 4]->m_iValue != 0) {
+            if (m_oGrid[iCasePosition - 4]->m_iValue == m_oGrid[iCasePosition]->m_iValue && !bIsFusion) {
                 fusion(iCasePosition - 4, iCasePosition);
                 iCasePosition -= 4;
                 m_bMove = true;
@@ -184,8 +188,8 @@ void Grid::moveUp(int iCasePosition, bool bIsFusion) {
             }
         }
         else {
-            m_oGrid[iCasePosition - 4].m_iValue = m_oGrid[iCasePosition].m_iValue;
-            m_oGrid[iCasePosition].m_iValue = 0;
+            m_oGrid[iCasePosition - 4]->m_iValue = m_oGrid[iCasePosition]->m_iValue;
+            m_oGrid[iCasePosition]->m_iValue = 0;
             iCasePosition -= 4;
             m_bMove = true;
             moveUp(iCasePosition);
@@ -200,9 +204,9 @@ void Grid::moveDown() {
 }
 
 void Grid::moveDown(int iCasePosition, bool bIsFusion) {
-    if (iCasePosition <= 11 && m_oGrid[iCasePosition].m_iValue != 0) {
-        if (m_oGrid[iCasePosition + 4].m_iValue != 0) {
-            if (m_oGrid[iCasePosition + 4].m_iValue == m_oGrid[iCasePosition].m_iValue && !bIsFusion) {
+    if (iCasePosition <= 11 && m_oGrid[iCasePosition]->m_iValue != 0) {
+        if (m_oGrid[iCasePosition + 4]->m_iValue != 0) {
+            if (m_oGrid[iCasePosition + 4]->m_iValue == m_oGrid[iCasePosition]->m_iValue && !bIsFusion) {
                 fusion(iCasePosition + 4, iCasePosition);
                 iCasePosition += 4;
                 m_bMove = true;
@@ -210,8 +214,8 @@ void Grid::moveDown(int iCasePosition, bool bIsFusion) {
             }
         }
         else {
-            m_oGrid[iCasePosition + 4].m_iValue = m_oGrid[iCasePosition].m_iValue;
-            m_oGrid[iCasePosition].m_iValue = 0;
+            m_oGrid[iCasePosition + 4]->m_iValue = m_oGrid[iCasePosition]->m_iValue;
+            m_oGrid[iCasePosition]->m_iValue = 0;
             iCasePosition += 4;
             m_bMove = true;
             moveDown(iCasePosition);
@@ -222,7 +226,7 @@ void Grid::moveDown(int iCasePosition, bool bIsFusion) {
 
 bool Grid::compare(int* tab) {
     for (int i = 0; i < m_iSize; i++) {
-        if (m_oGrid[i].m_iValue != tab[i]) {
+        if (m_oGrid[i]->m_iValue != tab[i]) {
             return false;
         }
     }
