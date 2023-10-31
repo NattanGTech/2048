@@ -1,5 +1,5 @@
-#include "window.h";
-#include "gameObject.h";
+#include "window.h"
+#include "gameObject.h"
 
 #include <SDL.h>
 //#include <SDL_image.h>
@@ -8,7 +8,7 @@
 
 Window::Window()
 {
-    
+
     if (0 != SDL_Init(SDL_INIT_EVERYTHING))
     {
         fprintf(stderr, "Erreur SDL_Init : %s", SDL_GetError());
@@ -34,17 +34,20 @@ Window::Window()
 
     SDL_RaiseWindow(m_sdlWindow);
     SDL_Color sdlBackground = { 187,173,160,255 };
-    GameObject* oScreen = new GameObject(0, 0, 480, 480, sdlBackground);
-    oScreen->drawRect(m_sdlRenderer);
-    display(); 
+    GameObject* oScreen = new GameObject(0, 0, 480, 480, sdlBackground, this);
+    display();
 }
 
 void Window::display()
 {
+    for (int i = 0; i < m_voGameObjects.size(); i++) {
+		m_voGameObjects[i]->drawRect(m_sdlRenderer);
+    }
     SDL_RenderPresent(m_sdlRenderer);
 }
 
-void Window::close(){
+
+void Window::close() {
     if (NULL != m_sdlWindow)
         SDL_DestroyWindow(m_sdlWindow);
     if (NULL != m_sdlRenderer)
@@ -55,5 +58,5 @@ void Window::close(){
 
 Window::~Window()
 {
-
+    close();
 }
