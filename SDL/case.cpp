@@ -2,7 +2,8 @@
 
 #include <iostream>
 
-Case::Case() : GameObject(0, 0, 100, 100, { 205,193,180,255 })
+
+Case::Case(int iX, int iY, int iWitdh, int iLength, SDL_Color sdlColor, Window* oWindow) : GameObject(iX,iY, iWitdh, iLength, sdlColor,oWindow)
 {
     m_iValue = 0;
 }
