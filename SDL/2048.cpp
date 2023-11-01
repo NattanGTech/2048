@@ -4,96 +4,58 @@
 #include "window.h"
 
 #include <SDL.h>
-#include <stdlib.h> 
-//#include <SDL_image.h>
 #include <time.h>
-#include <conio.h>
-#include <windows.h>
 
 #include <iostream>
-#include <string>
-#include <vector>
 
-#define KEY_UP 72
-#define KEY_DOWN 80
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
-
-
-//void close(SDL_Window* sdlWindow, SDL_Renderer* sdlRenderer);
 
 #undef main
 int main()
 {
 	srand(time(NULL));
 
-	/*SDL_Event sdlEvent;
-	SDL_bool sdlQuit = SDL_FALSE;*/
-	/*SDL_Color sdlEmptyCase = { 205,193,180,255 };
-	SDL_Color sdlCaseNum2 = { 238,228,218,255 };
-	SDL_Color sdlCaseNum4 = { 237,224,200,255 };
-	SDL_Color sdlCaseNum8 = { 242,177,121,255 };
-	SDL_Color sdlCaseNum16 = { 245,149,99,255 };
-	SDL_Color sdlCaseNum32 = { 246,124,95,255 };
-	SDL_Color sdlCaseNum64 = { 246,94,59,255 };
-	SDL_Color sdlCaseNum128 = { 237,207,114,255 };
-	SDL_Color sdlCaseNum256 = { 237,204,97,255 };
-	SDL_Color sdlCaseNum512 = { 237,200,80,255 };
-	SDL_Color sdlCaseNum1024 = { 237,197,63,255 };
-	SDL_Color sdlCaseNum2048 = { 237,194,46,255 };
-	SDL_Color sdlCaseNum4096 = { 119,161,54,255 };
-	SDL_Color sdlCaseNum8192 = { 45,179,136,255 };*/
+	SDL_Event sdlEvent;
+	SDL_bool sdlQuit = SDL_FALSE;
 	/*int iStatut = EXIT_FAILURE;*/
 
 	Window* oWindow = new Window();
 	Grid* oGrid = new Grid(oWindow);
 	oGrid->display();
-	test::move();
+	oWindow->display();
+	/*test::move();
 	test::win();
-	test::lose();
+	test::lose();*/
 
-	/*while(!quit){
-		while (SDL_PollEvent(&event) && !quit){
-			std::cout << "a";
-			if (event.type == SDL_QUIT) {
-				quit = SDL_TRUE;
-				close(window, renderer);
-			}
-		}*/
-	while (!oGrid->lose())
+	while (!oGrid->lose() && !sdlQuit)
 	{
-		int c = 0;
-		switch ((c = _getch()))
-		{
-		case KEY_UP:
-			oGrid->moveAndGenerateNewtiles(&Grid::moveUp);
-			break;
-		case KEY_DOWN:
-			oGrid->moveAndGenerateNewtiles(&Grid::moveDown);
-			break;
-		case KEY_RIGHT:
-			oGrid->moveAndGenerateNewtiles(&Grid::moveRight);
-			break;
-		case KEY_LEFT:
-			oGrid->moveAndGenerateNewtiles(&Grid::moveLeft);
-			break;
-		default:
-			break;
+		while (SDL_PollEvent(&sdlEvent)) {
+			if (sdlEvent.type == SDL_QUIT) {
+				sdlQuit = SDL_TRUE;
+				delete oWindow;
+			}
+			else if (sdlEvent.type == SDL_KEYDOWN)
+			{
+				if (sdlEvent.key.keysym.sym == SDLK_UP) {
+					oGrid->moveAndGenerateNewtiles(&Grid::moveUp);
+				}
+				else if (sdlEvent.key.keysym.sym == SDLK_DOWN) {
+					oGrid->moveAndGenerateNewtiles(&Grid::moveDown);
+				}
+				else if (sdlEvent.key.keysym.sym == SDLK_RIGHT) {
+					oGrid->moveAndGenerateNewtiles(&Grid::moveRight);
+				}
+				else if (sdlEvent.key.keysym.sym == SDLK_LEFT) {
+					oGrid->moveAndGenerateNewtiles(&Grid::moveLeft);
+				}
+				oGrid->display();
+				oWindow->display();
+			}
 		}
-		oGrid->display();
+		
 	}
-	/*}*/
-
-	std::cout << "perdu";
 
 	delete oGrid;
+	delete oWindow;
 	return 0;
 
 }
-//void close(SDL_Window* window, SDL_Renderer* renderer){
-//    if (NULL != window)
-//        SDL_DestroyWindow(window);
-//    if (NULL != renderer)
-//        SDL_DestroyRenderer(renderer);
-//    SDL_Quit();
-//}
