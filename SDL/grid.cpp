@@ -2,7 +2,6 @@
 #include "case.h";
 #include "gameObject.h"
 
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,23 +9,39 @@
 Grid::Grid(Window* oWindow)
 {
     m_iSize = 16;
-    
-    // m_oGrid = new Case[m_iSize];
+
+    m_mColors = { {0, { 205,193,180,255 }},
+                  {2, { 238,228,218,255 }},
+                  {4, { 237,224,200,255 }},
+                  {8, { 242,177,121,255 }},
+                  {16, { 245,149,99,255 }},
+                  {32, { 246,124,95,255 }},
+                  {64, { 246,94,59,255 }},
+                  {128, { 237,207,114,255 }},
+                  {256, { 237,204,97,255 }},
+                  {512, { 237,200,80,255 }},
+                  {1024, { 237,197,63,255 }},
+                  {2048, { 237,194,46,255 }},
+                  {4096, { 119,161,54,255 }},
+                  {8192, { 45,179,136,255 }} };
+
     for (int i = 0; i < m_iSize; i++) {
-        m_oGrid[i] = new Case(16 + (i % 4) * 100, 16 + (i / 4) * 100, 100, 100, { 205,193,180,255 }, oWindow);
-    }  
+        m_oGrid[i] = new Case(m_mColors, 16 + (i % 4) * 116, 16 + (i / 4) * 116, 100, 100, m_mColors[0], oWindow);
+    }
+ 
     m_iNbMax = 1;
     newTiles();
     newTiles();
 }
+
 Grid::Grid(int* tab)
 {
     m_iSize = 16;
-    // m_oGrid = new Case[m_iSize];
-    // for (int i = 0; i < m_iSize; i++) {
-    //     m_oGrid[i].m_iValue = tab[i];
-    // }
-    // m_iNbMax = 1;
+    /*m_oGrid = new Case[m_iSize];
+    for (int i = 0; i < m_iSize; i++) {
+        m_oGrid[i].m_iValue = tab[i];
+    }
+    m_iNbMax = 1;*/
 }
 
 void Grid::display()
@@ -39,7 +54,6 @@ void Grid::display()
     for (int i = 0; i < m_iSize; i++)
     {
         m_oGrid[i]->display(m_iNbMax);
-        // GameObject* oCase = new GameObject(16 + (100 * i), 16 + (100 * i % 4), 100, 100, { 205,193,180,255 }, window);
 
         if (i % 4 == 3)
         {
@@ -47,6 +61,7 @@ void Grid::display()
         }
     }
 }
+
 bool Grid::isFull() {
     freePosition();
     if (vifreePosition.empty()) {
@@ -61,6 +76,7 @@ bool Grid::win() {
     }
     return true;
 }
+
 bool Grid::lose() {
     if (isFull()) {
         for (int i = 0; i < m_iSize; i++) {
