@@ -1,13 +1,15 @@
 #pragma once
 
 #include "case.h";
-
+#include <map>
 #include <vector>
 
 
 class Grid
 {
 private:
+
+    std::map<int, SDL_Color> m_mColors;
     std::vector<int> vifreePosition;
     bool m_bMove;
     int m_iSizeNbMax;
