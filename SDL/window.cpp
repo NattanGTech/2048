@@ -35,13 +35,13 @@ Window::Window()
     SDL_RaiseWindow(m_sdlWindow);
     SDL_Color sdlBackground = { 187,173,160,255 };
     GameObject* oScreen = new GameObject(0, 0, 480, 480, sdlBackground, this);
-    display();
 }
 
 void Window::display()
 {
+	SDL_RenderClear(m_sdlRenderer);
     for (int i = 0; i < m_voGameObjects.size(); i++) {
-		m_voGameObjects[i]->drawRect(m_sdlRenderer);
+        m_voGameObjects[i]->drawRect(m_sdlRenderer);
     }
     SDL_RenderPresent(m_sdlRenderer);
 }
